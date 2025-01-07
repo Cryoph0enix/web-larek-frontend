@@ -5,7 +5,7 @@ interface IOrderConfirmed {
 	totalAmount: number;
 }
 
-interface IActionHandler  {
+interface IActionHandler {
 	handleSuccess: () => void;
 }
 

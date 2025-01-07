@@ -56,14 +56,10 @@ export class Form<T> extends Component<IValidationState> {
 	}
 
 	set validationErrors(value: string) {
-		if (value) {
-			this.setText(this._submitButton, value);
-		} else {
-			this.setText(this._submitButton, '');
-		}
+		this.setText(this._validationErrors, value);
 	}
 
-	render(state: Partial<T> & IValidationState): HTMLElement {
+	render(state: Partial<T> & IValidationState): HTMLFormElement {
 		const {isValid, validationErrors, ...inputs} = state;
 		super.render({isValid, validationErrors});
 		Object.assign(this, inputs);

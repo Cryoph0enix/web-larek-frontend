@@ -16,23 +16,23 @@ export interface IApplicationState {
 	isLoading: boolean;
 }
 
-export interface IProductsCollection  {
-	items: IProduct[];
+export interface IProductsCollection {
+	collection: IProduct[];
 }
 
 export interface IOrderDetails {
-	paymentMethod?: string;
-	deliveryAddress?: string;
-	contactNumber?: string;
-	emailAddress?: string;
-	orderTotal?: string | number;
+	payment?: string;
+	address?: string;
+	phone?: string;
+	email?: string;
+	total?: string | number;
 }
 
 export interface IOrder extends IOrderDetails {
 	items: string[];
 }
 
-export type OrderFormErrors  = Partial<Record<keyof IOrder, string>>;
+export type OrderFormErrors = Partial<Record<keyof IOrder, string>>;
 
 export interface IOrderResponse {
 	orderId: string;

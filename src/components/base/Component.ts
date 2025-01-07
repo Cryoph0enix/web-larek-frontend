@@ -5,7 +5,7 @@ export abstract class Component<T> {
 		element.classList.toggle(className, condition);
 	}
 
-	disableButton(element: HTMLElement, enabled: boolean) {
+	setDisabled(element: HTMLElement, enabled: boolean) {
 		if (element) {
 			if (enabled) element.setAttribute('disabled', 'disabled');
 			else element.removeAttribute('disabled');

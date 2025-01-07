@@ -6,11 +6,11 @@ export class ApplicationState extends Model<IApplicationState> {
 	selectedPreview: string;
 	cartItems: Product[] = [];
 	currentOrder: IOrder = {
-		deliveryAddress: '',
-		paymentMethod: 'card',
-		emailAddress: '',
-		orderTotal: 0,
-		contactNumber: '',
+		address: '',
+		payment: 'card',
+		email: '',
+		total: 0,
+		phone: '',
 		items: []
 	};
 	orderFormErrors: OrderFormErrors = {};
@@ -98,7 +98,7 @@ export class ApplicationState extends Model<IApplicationState> {
 
 	set orderTotal(value: number) {
 		try {
-			this.currentOrder.orderTotal = value;
+			this.currentOrder.total = value;
 		} catch (error) {
 			console.error('Ошибка при установке суммы заказа:', error);
 		}
@@ -109,7 +109,7 @@ export class ApplicationState extends Model<IApplicationState> {
 			return this.currentOrder.items.reduce((total, itemId) => {
 				const product = this.productCatalog.find(product => product.id === itemId);
 				if (product) {
-					return total + product.cost;
+					return total + product.price;
 				} else {
 					console.warn(`Продукт с ID ${itemId} не найден в каталоге.`);
 					return total; // Возвращаем текущую сумму, если продукт не найден
@@ -149,8 +149,8 @@ export class ApplicationState extends Model<IApplicationState> {
 
 	isOrderValid(): boolean {
 		const errors: typeof this.orderFormErrors = {};
-		if (!this.currentOrder.deliveryAddress) {
-			errors.deliveryAddress = 'Необходимо указать адрес.';
+		if (!this.currentOrder.address) {
+			errors.address = 'Необходимо указать адрес.';
 		}
 		this.orderFormErrors = errors;
 		this.events.emit('formErrors:change', this.orderFormErrors);
@@ -159,11 +159,11 @@ export class ApplicationState extends Model<IApplicationState> {
 
 	areContactsValid(): boolean {
 		const errors: typeof this.orderFormErrors = {};
-		if (!this.currentOrder.emailAddress) {
-			errors.emailAddress = 'Необходимо указать email.';
+		if (!this.currentOrder.email) {
+			errors.email = 'Необходимо указать email.';
 		}
-		if (!this.currentOrder.contactNumber) {
-			errors.contactNumber = 'Необходимо указать телефон.';
+		if (!this.currentOrder.phone) {
+			errors.phone = 'Необходимо указать телефон.';
 		}
 		this.orderFormErrors = errors;
 		this.events.emit('formErrors:change', this.orderFormErrors);
@@ -173,9 +173,9 @@ export class ApplicationState extends Model<IApplicationState> {
 
 export class Product extends Model<IProduct> {
 	id: string;
-	name: string;
-	details: string;
+	title: string;
+	description: string;
 	category: string;
-	imageUrl: string;
-	cost: number | null;
+	image: string;
+	price: number | null;
 }

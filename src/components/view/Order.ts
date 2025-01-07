@@ -3,7 +3,6 @@ import { ensureAllElements } from "../../utils/utils";
 import { IEvents } from "../base/events";
 import { Form } from "../base/Form";
 
-
 export class Order extends Form<IOrderDetails> {
 	protected _flatButtons: HTMLButtonElement[];
 
@@ -33,8 +32,8 @@ export class Order extends Form<IOrderDetails> {
 }
 
 export class ContactInformation extends Form<IOrderDetails> {
-	constructor(element: HTMLFormElement, events: IEvents) {
-		super(element, events);
+	constructor(element: HTMLFormElement, eventHandlers: IEvents) {
+		super(element, eventHandlers);
 	}
 	set contactNumber(value: string) {
 		(this.element.elements.namedItem('phone') as HTMLInputElement).value = value;

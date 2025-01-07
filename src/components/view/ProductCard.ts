@@ -19,13 +19,13 @@ export class ProductCard<T> extends Component<IProductCard> {
 	protected _category: HTMLElement;
 	protected _imageUrl: HTMLImageElement;
 	protected _cost: HTMLElement;
-	protected _colorType: Record<string, string> = {
+	protected _colorType = <Record<string, string>> {
 		"софт-скил": "soft",
 		"другое": "other",
 		"дополнительное": "additional",
 		"кнопка": "button",
 		"хард-скил": "hard"
-	};
+	}
 
 	constructor(element: HTMLElement, eventHandlers?: ICardEventHandlers) {
 		super(element);
@@ -33,7 +33,6 @@ export class ProductCard<T> extends Component<IProductCard> {
 		this._category = ensureElement<HTMLElement>(`.card__category`, element);
 		this._imageUrl = ensureElement<HTMLImageElement>(`.card__image`, element);
 		this._cost = ensureElement<HTMLElement>(`.card__price`, element);
-
 
 		if (eventHandlers?.onClick) {
 			element.addEventListener('click', eventHandlers.onClick);
@@ -88,10 +87,9 @@ export class ProductPreview extends ProductCard<IProductPreview> {
 	protected _button: HTMLElement;
 
 	constructor(element: HTMLElement, eventHandlers?: ICardEventHandlers) {
-		super(element, eventHandlers);
-
-		this._button = element.querySelector('.card__button');
-		this._text = ensureElement<HTMLElement>('.card__text', element);
+		super(element, eventHandlers)
+		this._button = element.querySelector(`.card__button`);
+		this._text = ensureElement<HTMLElement>(`.card__text`, element);
 
 		if (eventHandlers?.onClick && this._button) {
 			element.removeEventListener('click', eventHandlers.onClick);
@@ -118,10 +116,10 @@ export class ProductsBasket extends Component<IProductsBasket> {
 
 	constructor(element: HTMLElement, eventHandlers?: ICardEventHandlers) {
 		super(element);
-		this._name = ensureElement<HTMLElement>('.card__title', element);
-		this._cost = ensureElement<HTMLElement>('.card__price', element);
-		this._index = ensureElement<HTMLElement>('.basket__item-index', element);
-		this._button = element.querySelector('.card__button');
+		this._name = ensureElement<HTMLElement>(`.card__title`, element);
+		this._cost = ensureElement<HTMLElement>(`.card__price`, element);
+		this._index = ensureElement<HTMLElement>(`.basket__item-index`, element);
+		this._button = element.querySelector(`.card__button`);
 		if (eventHandlers?.onClick && this._button) {
 			element.removeEventListener('click', eventHandlers.onClick);
 			this._button.addEventListener('click', eventHandlers.onClick);

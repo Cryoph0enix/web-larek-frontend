@@ -2,7 +2,7 @@ import { IOrder, IOrderResponse, IProduct } from '../../types';
 import { Api, ApiListResponse} from "../base/api";
 
 export class ProductsApi extends Api {
-	private cdn: string;
+	cdn: string;
 
 	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
 		super(baseUrl, options)
