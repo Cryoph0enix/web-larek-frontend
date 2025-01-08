@@ -37,3 +37,8 @@ export type OrderFormErrors = Partial<Record<keyof IOrder, string>>;
 export interface IOrderResponse {
 	orderId: string;
 }
+
+export interface ICardEventHandlers {
+	onClick: (event: MouseEvent) => void;
+	onDoubleClick?: (event: MouseEvent) => void;
+}

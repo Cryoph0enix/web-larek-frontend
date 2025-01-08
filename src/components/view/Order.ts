@@ -30,15 +30,3 @@ export class Order extends Form<IOrderDetails> {
 		(this.element.elements.namedItem('address') as HTMLInputElement).value = value;
 	}
 }
-
-export class ContactInformation extends Form<IOrderDetails> {
-	constructor(element: HTMLFormElement, eventHandlers: IEvents) {
-		super(element, eventHandlers);
-	}
-	set contactNumber(value: string) {
-		(this.element.elements.namedItem('phone') as HTMLInputElement).value = value;
-	}
-	set emailAddress(value: string) {
-		(this.element.elements.namedItem('email') as HTMLInputElement).value = value;
-	}
-}

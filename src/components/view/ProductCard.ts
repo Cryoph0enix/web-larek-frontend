@@ -1,10 +1,6 @@
 import { ensureElement } from "../../utils/utils";
 import { Component } from "../base/Component";
-
-interface ICardEventHandlers {
-	onClick: (event: MouseEvent) => void;
-	onDoubleClick?: (event: MouseEvent) => void;
-}
+import { ICardEventHandlers } from '../../types';
 
 interface IProductCard {
 	name: string;
@@ -75,67 +71,5 @@ export class ProductCard<T> extends Component<IProductCard> {
 		} catch (error) {
 			console.error('Ошибка при установке стоимости:', error);
 		}
-	}
-}
-
-interface IProductPreview {
-	text: string;
-}
-
-export class ProductPreview extends ProductCard<IProductPreview> {
-	protected _text: HTMLElement;
-	protected _button: HTMLElement;
-
-	constructor(element: HTMLElement, eventHandlers?: ICardEventHandlers) {
-		super(element, eventHandlers)
-		this._button = element.querySelector(`.card__button`);
-		this._text = ensureElement<HTMLElement>(`.card__text`, element);
-
-		if (eventHandlers?.onClick && this._button) {
-			element.removeEventListener('click', eventHandlers.onClick);
-			this._button.addEventListener('click', eventHandlers.onClick);
-		}
-	}
-
-	set text(value: string) {
-		this.setText(this._text, value);
-	}
-}
-
-interface IProductsBasket {
-	name: string;
-	cost: number;
-	index: number;
-}
-
-export class ProductsBasket extends Component<IProductsBasket> {
-	protected _name: HTMLElement;
-	protected _cost: HTMLElement;
-	protected _button: HTMLElement;
-	protected _index: HTMLElement;
-
-	constructor(element: HTMLElement, eventHandlers?: ICardEventHandlers) {
-		super(element);
-		this._name = ensureElement<HTMLElement>(`.card__title`, element);
-		this._cost = ensureElement<HTMLElement>(`.card__price`, element);
-		this._index = ensureElement<HTMLElement>(`.basket__item-index`, element);
-		this._button = element.querySelector(`.card__button`);
-		if (eventHandlers?.onClick && this._button) {
-			element.removeEventListener('click', eventHandlers.onClick);
-			this._button.addEventListener('click', eventHandlers.onClick);
-		}
-	}
-
-	set index(value: number) {
-		this.setText(this._index, value);
-	}
-
-	set name(value: string) {
-		this.setText(this._name, value);
-	}
-
-	set cost(value: string | null) {
-		const displayValue = value === null ? 'Бесценно' : `${value} синапсов`;
-		this.setText(this._cost, displayValue);
 	}
 }

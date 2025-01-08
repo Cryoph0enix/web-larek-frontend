@@ -1,5 +1,6 @@
 import { OrderFormErrors, IApplicationState, IOrder, IOrderDetails, IProduct } from "../../types";
 import { Model } from "../base/Model";
+import { Product } from "../base/Product";
 
 export class ApplicationState extends Model<IApplicationState> {
 	productCatalog: Product[];
@@ -29,7 +30,9 @@ export class ApplicationState extends Model<IApplicationState> {
 			if (!item || !item.id) {
 				throw new Error('Неверный продукт для добавления в заказ.');
 			}
-			this.currentOrder.items.push(item.id);
+			if (item.price !== null) {
+				this.currentOrder.items.push(item.id);
+			}
 		} catch (error) {
 			console.error('Ошибка при добавлении продукта в заказ:', error);
 		}
@@ -169,13 +172,4 @@ export class ApplicationState extends Model<IApplicationState> {
 		this.events.emit('formErrors:change', this.orderFormErrors);
 		return Object.keys(errors).length === 0;
 	}
-}
-
-export class Product extends Model<IProduct> {
-	id: string;
-	title: string;
-	description: string;
-	category: string;
-	image: string;
-	price: number | null;
 }

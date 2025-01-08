@@ -3,20 +3,24 @@ import { EventEmitter } from './components/base/events';
 import { API_URL, CDN_URL } from './utils/constants';
 import { ProductsApi } from './components/application/ProductsApi';
 import {ensureElement, cloneTemplate } from './utils/utils';
-import { ApplicationState, Product } from './components/application/ApplicationState';
+import { ApplicationState } from './components/application/ApplicationState';
 import { MarketPlace} from './components/view/MarketPlace';
-import { ProductCard, ProductPreview, ProductsBasket } from './components/view/ProductCard';
+import { ProductCard } from './components/view/ProductCard';
 import { Popup } from './components/view/Popup';
 import { Basket } from './components/view/Basket';
-import { Order, ContactInformation } from './components/view/Order';
+import { Order } from './components/view/Order';
 import { IOrderDetails } from './types';
 import { OrderConfirmed } from './components/view/OrderConfirmed';
+import { Product } from './components/base/Product';
+import { ContactInformation} from './components/base/ContactInformation';
+import { ProductPreview } from './components/view/ProductPreview';
+import { ProductsBasket } from './components/view/ProductsBasket';
 
 const eventEmitter = new EventEmitter();
 const productsApi = new ProductsApi(CDN_URL, API_URL);
 
-eventEmitter.onAll(({ eventName, data }) => {
-	console.log(eventName, data);
+eventEmitter.onAll(({ eventName}) => {
+	return eventName;
 })
 
 // Шаблоны
@@ -42,7 +46,7 @@ const order = new Order(cloneTemplate<HTMLFormElement>(orderTemplate), eventEmit
 const contacts = new ContactInformation(cloneTemplate<HTMLFormElement>(contactsTemplate), eventEmitter);
 
 // Сохранение данных карточек в модели данных сайта
-function updateMarketPlaceItems() {
+const updateMarketPlaceItems = () => {
 	// Получаем список товаров из каталога продуктов
 	const items = applicationState.productCatalog;
 	// Обновляем элементы на сайте
@@ -71,11 +75,11 @@ function handleCardSelect(item: Product) {
 eventEmitter.on('items:changed', updateMarketPlaceItems);
 
 //Настройка превью
-function handleCardPreviewSelect(item: Product) {
+const handleCardPreviewSelect = (item: Product) => {
 	applicationState.updatePreview(item);
 }
 
-function handlePreviewChange(item: Product) {
+const handlePreviewChange = (item: Product) => {
 	// Создаем экземпляр карточки продукта с обработчиком клика
 	const productPreview = createProductPreview(item);
 	// Отображаем всплывающее окно с содержимым карточки продукта
@@ -106,7 +110,7 @@ eventEmitter.on('card:select', handleCardPreviewSelect);
 eventEmitter.on('preview:changed', handlePreviewChange);
 
 // Добавление товаров в корзину
-function handleAddToCart(item: Product) {
+const handleAddToCart = (item: Product) => {
 	applicationState.addItemToOrder(item);
 	applicationState.addItemToCart(item);
 	marketPlace.counter = applicationState.basketItems.length;
@@ -151,7 +155,7 @@ eventEmitter.on('card:remove', (item: Product) => {
 });
 
 // Обработчик валидации форм
-function handleValidationErrors(validationErrors: Partial<IOrderDetails>) {
+const handleValidationErrors = (validationErrors: Partial<IOrderDetails>) => {
 	const { payment, address, phone, email } = validationErrors;
 	order.isValid = !address && !payment;
 	contacts.isValid = !phone && !email;
@@ -162,7 +166,7 @@ function handleValidationErrors(validationErrors: Partial<IOrderDetails>) {
 eventEmitter.on('formErrors:change', handleValidationErrors);
 
 // Обработчик изменений полей ввода
-function handleFieldChange(type: 'contacts' | 'order', data: { field: keyof IOrderDetails; value: string }) {
+const handleFieldChange = (type: 'contacts' | 'order', data: { field: keyof IOrderDetails; value: string }) => {
 	const { field, value } = data;
 	if (type === 'contacts') {
 		applicationState.updateContactsField(field, value);
@@ -175,7 +179,7 @@ eventEmitter.on(/^contacts\..*:change/, (data: { field: keyof IOrderDetails; val
 eventEmitter.on(/^order\..*:change/, (data: { field: keyof IOrderDetails; value: string }) => handleFieldChange('order', data));
 
 // Обработчик изменения способа оплаты
-function handlePaymentChange(button: HTMLButtonElement) {
+const handlePaymentChange = (button: HTMLButtonElement) => {
 	applicationState.currentOrder.payment = button.name;
 }
 
@@ -206,16 +210,21 @@ eventEmitter.on('order:submit', () => {
 	});
 });
 
+// Очистка корзины
+function clearBasket() {
+	applicationState.emptyCart();
+	marketPlace.counter = applicationState.basketItems.length;
+	updateBasketState();
+}
+
 // Обработчик формы заполнения контактной информации
 eventEmitter.on('contacts:submit', () => {
 	productsApi.productsOrder(applicationState.currentOrder)
 		.then((result) => {
-			console.log(applicationState.currentOrder)
 			const success = new OrderConfirmed(cloneTemplate(successTemplate), {
 				handleSuccess: () => {
+					clearBasket();
 					popup.closeModal();
-					applicationState.emptyCart();
-					marketPlace.counter = applicationState.basketItems.length;
 				}
 			});
 			popup.render({
@@ -230,7 +239,7 @@ eventEmitter.on('contacts:submit', () => {
 });
 
 // Блокировка прокрутки страницы при открытом попапе
-function togglePageScroll(isLocked: boolean) {
+const togglePageScroll = (isLocked: boolean) => {
 	marketPlace.lockClass = isLocked;
 }
 
